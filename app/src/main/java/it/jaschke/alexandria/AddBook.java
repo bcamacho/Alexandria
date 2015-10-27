@@ -10,6 +10,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import it.jaschke.alexandria.data.AlexandriaContract;
+import it.jaschke.alexandria.data.GetBarcode;
 import it.jaschke.alexandria.services.BookService;
 import it.jaschke.alexandria.services.DownloadImage;
 
@@ -33,13 +34,30 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private final String EAN_CONTENT="eanContent";
     private static final String SCAN_FORMAT = "scanFormat";
     private static final String SCAN_CONTENTS = "scanContents";
+    private static String barCodeData;
 
     private String mScanFormat = "Format:";
     private String mScanContents = "Contents:";
-
-
-
-    public AddBook(){
+//    private CompoundBarcodeView barcodeView;
+//    private BarcodeCallback callback = new BarcodeCallback() {
+//        @Override
+//        public void barcodeResult(BarcodeResult result) {
+//            if (result.getText() != null) {
+////                barcodeView.setStatusText(result.getText());
+//                ean.setText(result.getText());
+//            }
+////            //Added preview of scanned barcode
+////            ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
+////            imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
+//        }
+//
+//        @Override
+//        public void possibleResultPoints(List<ResultPoint> list) {
+//
+//        }
+//
+//    };
+        public AddBook(){
     }
 
     @Override
@@ -97,6 +115,10 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
                 // are using an external app.
                 //when you're done, remove the toast below.
                 Context context = getActivity();
+//                Bundle barCodeData = new Bundle();
+                Intent i = new Intent(getActivity(), GetBarcode.class);
+//                i.putExtra("barCodeData", barCodeData);
+                startActivity(i);
                 CharSequence text = "This button should let you scan a book for its barcode!";
                 int duration = Toast.LENGTH_SHORT;
 
@@ -105,6 +127,8 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 
             }
         });
+
+
 
         rootView.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,5 +227,23 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         activity.setTitle(R.string.scan);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(getClass().getSimpleName(),"resumed");
+
+//        Bundle intentData = getActivity().getIntent().getExtras();
+        if (barCodeData != null) {
+            ean.setText(barCodeData);
+            Log.d(TAG, "got data");
+        }else {
+            Log.e(TAG, "ERROR, no data in bundle");
+        }
+    }
+
+    public static void setBarCodeData(String data){
+        barCodeData = data;
     }
 }
