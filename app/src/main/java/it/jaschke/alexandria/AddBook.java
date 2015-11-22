@@ -18,7 +18,13 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.google.zxing.ResultPoint;
+import com.journeyapps.barcodescanner.BarcodeCallback;
+import com.journeyapps.barcodescanner.BarcodeResult;
+import com.journeyapps.barcodescanner.CompoundBarcodeView;
+
+import java.util.List;
 
 import it.jaschke.alexandria.data.AlexandriaContract;
 import it.jaschke.alexandria.data.GetBarcode;
@@ -34,29 +40,27 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     private final String EAN_CONTENT="eanContent";
     private static final String SCAN_FORMAT = "scanFormat";
     private static final String SCAN_CONTENTS = "scanContents";
+    // save barcode to
     private static String barCodeData;
 
     private String mScanFormat = "Format:";
     private String mScanContents = "Contents:";
-//    private CompoundBarcodeView barcodeView;
-//    private BarcodeCallback callback = new BarcodeCallback() {
-//        @Override
-//        public void barcodeResult(BarcodeResult result) {
-//            if (result.getText() != null) {
-////                barcodeView.setStatusText(result.getText());
-//                ean.setText(result.getText());
-//            }
-////            //Added preview of scanned barcode
-////            ImageView imageView = (ImageView) findViewById(R.id.barcodePreview);
-////            imageView.setImageBitmap(result.getBitmapWithResultPoints(Color.YELLOW));
-//        }
-//
-//        @Override
-//        public void possibleResultPoints(List<ResultPoint> list) {
-//
-//        }
-//
-//    };
+    private CompoundBarcodeView barcodeView;
+    private BarcodeCallback callback = new BarcodeCallback() {
+        @Override
+        public void barcodeResult(BarcodeResult result) {
+            if (result.getText() != null) {
+                barcodeView.setStatusText(result.getText());
+                ean.setText(result.getText());
+            }
+        }
+
+        @Override
+        public void possibleResultPoints(List<ResultPoint> list) {
+
+        }
+
+    };
         public AddBook(){
     }
 
@@ -108,28 +112,14 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         rootView.findViewById(R.id.scan_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // This is the callback method that the system will invoke when your button is
-                // clicked. You might do this by launching another app or by including the
-                //functionality directly in this app.
-                // Hint: Use a Try/Catch block to handle the Intent dispatch gracefully, if you
-                // are using an external app.
-                //when you're done, remove the toast below.
                 Context context = getActivity();
-//                Bundle barCodeData = new Bundle();
+                // get barCode using https://github.com/journeyapps/zxing-android-embedded library
                 Intent i = new Intent(getActivity(), GetBarcode.class);
-//                i.putExtra("barCodeData", barCodeData);
+                i.putExtra("barCodeData", barCodeData);
                 startActivity(i);
-                CharSequence text = "This button should let you scan a book for its barcode!";
-                int duration = Toast.LENGTH_SHORT;
-
-                Toast toast = Toast.makeText(context, text, duration);
-                toast.show();
-
             }
         });
-
-
-
+        
         rootView.findViewById(R.id.save_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -237,7 +227,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
 //        Bundle intentData = getActivity().getIntent().getExtras();
         if (barCodeData != null) {
             ean.setText(barCodeData);
-            Log.d(TAG, "got data");
+            Log.d(TAG, "got data :" + barCodeData);
         }else {
             Log.e(TAG, "ERROR, no data in bundle");
         }

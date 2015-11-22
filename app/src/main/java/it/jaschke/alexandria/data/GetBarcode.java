@@ -15,6 +15,9 @@ public class GetBarcode extends Activity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    /**
+     * https://github.com/journeyapps/zxing-android-embedded
+     */
 
     IntentIntegrator integrator = new IntentIntegrator(this); // `this` is the current Activity
     integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
