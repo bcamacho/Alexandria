@@ -202,7 +202,7 @@ public class BookService extends IntentService {
                     writeBackCategories(ean, bookInfo.getJSONArray(CATEGORIES));
                 }
             } else {
-                handler.post(new DisplayToast(this, "No data found, please verify internet connectivity"));
+                handler.post(new DisplayToast(this, getString(R.string.error_check_internet)));
             }
 
         } catch (JSONException e) {

@@ -216,8 +216,6 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
     public void onResume() {
         super.onResume();
         Log.d(getClass().getSimpleName(),"resumed");
-
-//        Bundle intentData = getActivity().getIntent().getExtras();
         if (barCodeData != null) {
             ean.setText(barCodeData);
             Log.d(TAG, "got data :" + barCodeData);

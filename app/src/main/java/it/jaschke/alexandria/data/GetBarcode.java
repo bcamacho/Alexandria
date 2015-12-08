@@ -9,6 +9,7 @@ import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
 import it.jaschke.alexandria.AddBook;
+import it.jaschke.alexandria.R;
 
 
 public class GetBarcode extends Activity {
@@ -21,7 +22,7 @@ public class GetBarcode extends Activity {
 
     IntentIntegrator integrator = new IntentIntegrator(this); // `this` is the current Activity
     integrator.setDesiredBarcodeFormats(IntentIntegrator.ONE_D_CODE_TYPES);
-    integrator.setPrompt("Scan a barcode");
+    integrator.setPrompt(getString(R.string.scan_barcode));
     integrator.setCameraId(0);  // Use a specific camera of the device
     integrator.setBeepEnabled(false);
     integrator.initiateScan();
@@ -41,7 +42,7 @@ public class GetBarcode extends Activity {
       }
     } else {
       // else continue with any other code you need in the method
-      Log.e(getClass().getSimpleName(), "ERROR");
+      Log.e(getClass().getSimpleName(), getString(R.string.simple_error));
       AddBook.setBarCodeData("");
 
     }
